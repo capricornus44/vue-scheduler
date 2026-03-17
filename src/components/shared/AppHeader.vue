@@ -13,10 +13,14 @@ import ThemeToggle from './ThemeToggle.vue'
 
     <div class="flex items-center gap-2">
       <Button variant="outline" size="icon-lg">
-        <Github class="h-[1.2rem] w-[1.2rem]"/>
-        <span class="sr-only">GitHub Link</span>
+        <a href="https://github.com/capricornus44/vue-scheduler" target="_blank">
+          <Github class="h-[1.2rem] w-[1.2rem]"/>
+          <span class="sr-only">GitHub Link</span>
+        </a>
       </Button>
       <ThemeToggle />
     </div>
   </header>
 </template>
+
+
