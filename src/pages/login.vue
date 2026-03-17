@@ -1,7 +1,4 @@
 <script setup lang="ts">
-defineOptions({
-  name: 'LoginPage',
-})
 </script>
 
 <template>
