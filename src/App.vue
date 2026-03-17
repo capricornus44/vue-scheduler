@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import AppCalendar from './components/calendar/AppCalendar.vue'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <AppCalendar />
+  <RouterView />
 </template>
 
 <style scoped></style>
