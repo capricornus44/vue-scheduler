@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import { format } from 'date-fns'
 
-import EventCount from './EventCount.vue';
-import DateNavigation from './DateNavigation.vue';
-import CurrentDateIcon from './CurrentDateIcon.vue';
-import type { CalendarEvent, CalendarView } from '../../calendar.types';
+import EventCount from './EventCount.vue'
+import DateNavigation from './DateNavigation.vue'
+import CurrentDateIcon from './CurrentDateIcon.vue'
+import type { CalendarEvent, CalendarView } from '../../calendar.types'
 
-const date = defineModel<Date>('date', { required: true });
+const date = defineModel<Date>('date', { required: true })
 
 const { view, events } = defineProps<{
-  view: CalendarView,
+  view: CalendarView
   events: CalendarEvent[]
-}>();
+}>()
 </script>
 
 <template>
-  <div class="flex gap-3 ">
+  <div class="flex gap-3">
     <CurrentDateIcon />
     <div class="flex flex-col justify-between">
       <div class="flex items-center justify-between">

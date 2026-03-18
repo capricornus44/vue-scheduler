@@ -1,5 +1,5 @@
 import { addDays, startOfMonth } from 'date-fns'
-import type { CalendarEvent } from "@/components/calendar/calendar.types"
+import type { CalendarEvent } from '@/components/calendar/calendar.types'
 import { CalendarColorOptions } from '@/components/calendar/calendar.constants'
 
 const eventColors = CalendarColorOptions.map((color) => color.value)
@@ -27,7 +27,7 @@ const generateEventDuration = (): number => {
   return durations[Math.floor(Math.random() * durations.length)]!
 }
 
-export const generateMockEvents = (): CalendarEvent[] =>{
+export const generateMockEvents = (): CalendarEvent[] => {
   const events: CalendarEvent[] = []
   const startDate = startOfMonth(new Date())
 

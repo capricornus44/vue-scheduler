@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import ViewToggle from './ViewToggle.vue';
-import AddEventButton from './AddEventButton.vue';
-import type { CalendarView } from '../../calendar.types';
+import ViewToggle from './ViewToggle.vue'
+import AddEventButton from './AddEventButton.vue'
+import type { CalendarView } from '../../calendar.types'
 
-const view = defineModel<CalendarView>('view', { required: true });
+const view = defineModel<CalendarView>('view', { required: true })
+const date = defineModel<Date>('date', { required: true })
 </script>
 
 <template>
   <div class="flex md:justify-start justify-between items-center gap-4">
-    <ViewToggle v-model:view="view"/>
-    <AddEventButton />
+    <ViewToggle v-model:view="view" />
+    <AddEventButton v-model:date="date" />
   </div>
 </template>

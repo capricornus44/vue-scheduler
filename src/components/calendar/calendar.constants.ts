@@ -1,5 +1,6 @@
-export const CalendarViews = ['day', 'week', 'month'] as const;
-
+export const CalendarViews = ['day', 'week', 'month'] as const
+export const Hours = Array.from({ length: 12 }, (_, i) => i + 1)
+export const Minutes = Array.from({ length: 12 }, (_, i) => i * 5)
 export const CalendarColorOptions = [
   {
     value: 'blue',
@@ -60,8 +61,7 @@ export const CalendarColorOptions = [
     label: 'Emerald',
     class: {
       base: 'bg-emerald-500 border-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500',
-      light:
-        'bg-emerald-300 border-emerald-300 bg-emerald-300/10 text-emerald-300',
+      light: 'bg-emerald-300 border-emerald-300 bg-emerald-300/10 text-emerald-300',
       dark: 'dark:bg-emerald-700 dark:border-emerald-700 bg-emerald-700/10 text-emerald-700',
     },
   },

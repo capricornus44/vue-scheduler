@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { isSameMonth } from 'date-fns'
 
-import type { CalendarEvent } from '../../calendar.types';
-
+import type { CalendarEvent } from '../../calendar.types'
 
 const { events, date } = defineProps<{
-  events: CalendarEvent[];
-  date: Date;
-}>();
+  events: CalendarEvent[]
+  date: Date
+}>()
 
 const eventsInMonth = computed(() => {
-  return events.filter((event) => isSameMonth(event.start, date));
-});
+  return events.filter((event) => isSameMonth(event.start, date))
+})
 </script>
 
 <template>
