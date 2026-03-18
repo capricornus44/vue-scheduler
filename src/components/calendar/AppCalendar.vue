@@ -10,7 +10,8 @@ const events = ref<CalendarEvent[]>(generateMockEvents());
 </script>
 
 <template>
-  <CalendarHeader v-model:date="date" :view="view" :events="events" />
+  <CalendarHeader v-model:date="date" v-model:view="view" :events="events" />
+  <div>{{ view }}</div>
 </template>
 
 <style scoped></style>
