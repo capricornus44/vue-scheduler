@@ -1,7 +1,12 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-vue-next'
+import {
+  CalendarDate,
+  type DateValue,
+} from '@internationalized/date'
+import { toDate } from 'reka-ui/date'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -27,16 +32,22 @@ watch(() => field.value, (newValue: string | undefined) => {
   }
 });
 
-const handleDateSelect = (selectedDate: Date | undefined) => {
+const handleDateSelect = (selectedDate: DateValue | undefined) => {
   if (selectedDate) {
+    const d = toDate(selectedDate)
     const newDate = new Date(date.value)
-    newDate.setFullYear(selectedDate.getFullYear())
-    newDate.setMonth(selectedDate.getMonth())
-    newDate.setDate(selectedDate.getDate())
+    newDate.setFullYear(d.getFullYear())
+    newDate.setMonth(d.getMonth())
+    newDate.setDate(d.getDate())
     date.value = newDate
     field.onChange(newDate.toISOString())
   }
 }
+
+const calendarValue = computed({
+  get: () => new CalendarDate(date.value.getFullYear(), date.value.getMonth() + 1, date.value.getDate()),
+  set: (val) => handleDateSelect(val),
+})
 
 const handleTimeChange = (type: 'hour' | 'minute' | 'ampm', value: string) => {
   const newDate = new Date(date.value)
@@ -70,7 +81,7 @@ const handleTimeChange = (type: 'hour' | 'minute' | 'ampm', value: string) => {
       </Button>
     </PopoverTrigger>
     <PopoverContent class="w-auto p-0 flex flex-col sm:flex-row">
-      <Calendar mode="single" :selected="date" @select="handleDateSelect" initialFocus />
+      <Calendar v-model="calendarValue" initial-focus />
 
       <div class="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
         <ScrollArea class="w-64 sm:w-auto">

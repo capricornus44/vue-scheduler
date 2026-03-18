@@ -4,7 +4,7 @@ import { watch } from 'vue'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 
-import {DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import {
   FormControl,
   FormField,
@@ -18,7 +18,7 @@ import DateTimePicker from '@/components/shared/DateTimePicker.vue'
 import ColorPicker from '@/components/shared/ColorPicker.vue'
 import type { CalendarEvent } from '../calendar.types'
 
-const { open } = defineProps<{ open: boolean }>();
+const open = defineModel<boolean>('open', { required: true });
 const date = defineModel<Date>('date', { required: true });
 
 const eventSchema = z.object({
@@ -78,6 +78,7 @@ const onSubmit = form.handleSubmit(
     }
     console.log(newEvent);
     form.resetForm();
+    open.value = false;
   }
 );
 </script>
@@ -86,6 +87,9 @@ const onSubmit = form.handleSubmit(
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Create event</DialogTitle>
+      <DialogDescription>
+        Fill out the form below to add a new event to your calendar.
+      </DialogDescription>
     </DialogHeader>
 
     <form @submit="onSubmit" class="space-y-4">
@@ -118,7 +122,6 @@ const onSubmit = form.handleSubmit(
           <FormMessage />
         </FormItem>
       </FormField>
-
 
       <FormField v-slot="{ field }" name="color">
         <FormItem>

@@ -18,6 +18,6 @@ const date = defineModel<Date>('date', { required: true })
         Add Event
       </Button>
     </DialogTrigger>
-    <CreateEventDialog v-model:date="date" :open="open" />
+    <CreateEventDialog v-model:date="date" v-model:open="open" />
   </Dialog>
 </template>
