@@ -12,12 +12,7 @@ import {
 } from 'date-fns'
 
 import { cn } from '@/lib/utils'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import CalendarEventTooltip from '../CalendarEventTooltip.vue'
 
 import type { CalendarEvent } from '../../calendar.types'
 
@@ -50,56 +45,44 @@ const getDayEvents = (day: Date) => {
     </div>
 
     <div class="grid grid-cols-7 grow overflow-y-auto">
-      <TooltipProvider>
-        <div
-          v-for="day in days"
-          :key="day.toISOString()"
-          :class="cn(
-            'min-h-[120px] p-2 border-r border-b flex flex-col gap-1',
-            !isSameMonth(day, date) && 'bg-muted/20 text-muted-foreground'
-          )"
-        >
-          <div class="flex justify-between items-start">
-            <span
-              :class="cn(
-                'text-xs font-medium size-6 flex items-center justify-center rounded-full',
-                isSameDay(day, new Date()) && 'bg-sky-500 text-white'
-              )"
-            >
-              {{ format(day, 'd') }}
-            </span>
-          </div>
-
-          <div class="flex flex-col gap-0.5 overflow-y-auto">
-            <template
-              v-for="event in getDayEvents(day)"
-              :key="event.id"
-            >
-              <Tooltip>
-                <TooltipTrigger as-child>
-                  <div
-                    :class="cn(
-                      `px-1.5 py-0.5 text-[10px] rounded-sm truncate border-l-2 cursor-pointer`,
-                      `bg-${event.color}-500/10 text-${event.color}-500 border-${event.color}-500`
-                    )"
-                    @click="() => { console.log(event) }"
-                  >
-                    {{ event.title }}
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <div class="flex flex-col gap-1">
-                    <p class="font-semibold">{{ event.title }}</p>
-                    <p class="text-xs text-muted-foreground">
-                      {{ format(event.start, 'h:mm a') }} - {{ format(event.end, 'h:mm a') }}
-                    </p>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </template>
-          </div>
+      <div
+        v-for="day in days"
+        :key="day.toISOString()"
+        :class="cn(
+          'min-h-[120px] p-2 border-r border-b flex flex-col gap-1 transition-colors',
+          !isSameMonth(day, date) && 'bg-muted/80 text-muted-foreground/80 opacity-80'
+        )"
+      >
+        <div class="flex justify-between items-start">
+          <span
+            :class="cn(
+              'text-xs font-medium size-6 flex items-center justify-center rounded-full',
+              isSameDay(day, new Date()) && 'bg-sky-500 text-white'
+            )"
+          >
+            {{ format(day, 'd') }}
+          </span>
         </div>
-      </TooltipProvider>
+
+        <div class="flex flex-col gap-0.5 overflow-y-auto">
+          <CalendarEventTooltip
+            v-for="event in getDayEvents(day)"
+            :key="event.id"
+            :event="event"
+            side="top"
+          >
+            <div
+              :class="cn(
+                `px-1.5 py-0.5 text-[10px] rounded-sm truncate border-l-2 cursor-pointer`,
+                `bg-${event.color}-500/10 text-${event.color}-500 border-${event.color}-500`
+              )"
+              @click="() => { console.log(event) }"
+            >
+              {{ event.title }}
+            </div>
+          </CalendarEventTooltip>
+        </div>
+      </div>
     </div>
   </div>
 </template>

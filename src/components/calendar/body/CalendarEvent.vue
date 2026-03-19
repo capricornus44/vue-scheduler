@@ -3,12 +3,7 @@ import { computed } from 'vue'
 import { format, isSameDay } from 'date-fns'
 
 import { cn } from '@/lib/utils'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import CalendarEventTooltip from './CalendarEventTooltip.vue'
 import type { CalendarEvent, CalendarEventPosition } from '../calendar.types'
 
 const { event, month = false, className, events } = defineProps<{
@@ -74,45 +69,33 @@ const style = computed(() => {
 </script>
 
 <template>
-  <TooltipProvider>
-    <Tooltip>
-      <TooltipTrigger as-child>
-        <div
-          :class="cn(
-            `px-3 py-1.5 rounded-md truncate cursor-pointer transition-all duration-300 bg-${event.color}-500/10 hover:bg-${event.color}-500/20 border border-${event.color}-500`,
-            !month && 'absolute',
-            className
-          )"
-          :style="style"
-          @click="() => { console.log(event) }"
-        >
-          <div
-            :class="cn(
-              `flex flex-col w-full text-${event.color}-500`,
-              month && 'flex-row items-center justify-between'
-            )"
-          >
-            <p :class="cn('font-bold truncate', month && 'text-xs')">
-              {{ event.title }}
-            </p>
-            <p :class="cn('text-sm', month && 'text-xs')">
-              <span>{{ format(event.start, 'h:mm a') }}</span>
-              <span :class="cn('mx-1', month && 'hidden')">-</span>
-              <span :class="cn(month && 'hidden')">
-                {{ format(event.end, 'h:mm a') }}
-              </span>
-            </p>
-          </div>
-        </div>
-      </TooltipTrigger>
-      <TooltipContent>
-        <div class="flex flex-col gap-1">
-          <p class="font-semibold">{{ event.title }}</p>
-          <p class="text-xs text-muted-foreground">
-            {{ format(event.start, 'h:mm a') }} - {{ format(event.end, 'h:mm a') }}
-          </p>
-        </div>
-      </TooltipContent>
-    </Tooltip>
-  </TooltipProvider>
+  <CalendarEventTooltip :event="event" side="top">
+    <div
+      :class="cn(
+        `px-3 py-1.5 rounded-md truncate cursor-pointer transition-all duration-300 bg-${event.color}-500/10 hover:bg-${event.color}-500/20 border border-${event.color}-500 `,
+        !month && 'absolute',
+        className
+      )"
+      :style="style"
+      @click="() => { console.log(event) }"
+    >
+      <div
+        :class="cn(
+          `flex flex-col w-full text-${event.color}-500`,
+          month && 'flex-row items-center justify-between'
+        )"
+      >
+        <p :class="cn('font-bold truncate', month && 'text-xs')">
+          {{ event.title }}
+        </p>
+        <p :class="cn('text-sm truncate', month && 'text-xs')">
+          <span>{{ format(event.start, 'h:mm a') }}</span>
+          <span :class="cn('mx-1', month && 'hidden')">-</span>
+          <span :class="cn(month && 'hidden')">
+            {{ format(event.end, 'h:mm a') }}
+          </span>
+        </p>
+      </div>
+    </div>
+  </CalendarEventTooltip>
 </template>

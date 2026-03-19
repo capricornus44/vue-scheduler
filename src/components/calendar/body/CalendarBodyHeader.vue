@@ -14,7 +14,7 @@ const isToday = isSameDay(date, new Date())
     <span
       :class="{
         'text-xs font-medium': true,
-        'text-primary': isToday,
+        'text-sky-500': isToday,
         'text-muted-foreground': !isToday,
       }"
     >
@@ -25,7 +25,7 @@ const isToday = isSameDay(date, new Date())
         v-if="!onlyDay"
         :class="{
           'text-xs font-medium': true,
-          'text-primary font-bold': isToday,
+          'text-sky-500 font-bold': isToday,
           'text-foreground': !isToday,
         }"
       >
