@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import type { CalendarEvent, CalendarView } from './calendar.types'
 import CalendarHeader from './header/CalendarHeader.vue'
+import CalendarBody from './body/CalendarBody.vue'
 import { generateMockEvents } from '@/lib/mockCalendarEvents'
 
 const view = ref<CalendarView>('week')
@@ -11,5 +12,5 @@ const events = ref<CalendarEvent[]>(generateMockEvents())
 
 <template>
   <CalendarHeader v-model:date="date" v-model:view="view" :events="events" />
-  <div>{{ view }}</div>
+  <CalendarBody :view="view" :date="date" :events="events" />
 </template>

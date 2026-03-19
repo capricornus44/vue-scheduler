@@ -1,6 +1,7 @@
 export const CalendarViews = ['day', 'week', 'month'] as const
 export const Hours = Array.from({ length: 12 }, (_, i) => i + 1)
 export const Minutes = Array.from({ length: 12 }, (_, i) => i * 5)
+export const TimelineHours = Array.from({ length: 24 }, (_, i) => i)
 export const CalendarColorOptions = [
   {
     value: 'blue',

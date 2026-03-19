@@ -10,3 +10,11 @@ export interface CalendarEvent {
 }
 
 export type CalendarView = (typeof CalendarViews)[number]
+
+export interface CalendarEventPosition {
+  left: string
+  width: string
+  top: string
+  height: string
+}
+

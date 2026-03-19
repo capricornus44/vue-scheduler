@@ -133,7 +133,7 @@ const onSubmit = form.handleSubmit(
         </FormItem>
       </FormField>
 
-      <Button type="submit" class="bg-sky-500 hover:bg-sky-600 flex w-fit ml-auto">
+      <Button type="submit" class="bg-sky-500 hover:bg-sky-600 flex w-fit ml-auto text-white">
         Create Event
       </Button>
     </form>
