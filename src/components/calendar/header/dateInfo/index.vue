@@ -16,7 +16,7 @@ const { view, events } = defineProps<{
 
 <template>
   <div class="flex gap-3">
-    <CurrentDateIcon />
+    <CurrentDateIcon @click="date = new Date()" />
     <div class="flex flex-col justify-between">
       <div class="flex items-center justify-between">
         <p class="text-lg font-semibold">{{ format(date, 'MMMM yyyy') }}</p>
