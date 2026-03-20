@@ -14,7 +14,7 @@ const { events } = defineProps<{
 
 const settings = useCalendarSettings()
 
-const weekStart = computed(() => startOfWeek(date.value, { weekStartsOn: 1 }))
+const weekStart = computed(() => startOfWeek(date.value, { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 }))
 const weekDays = computed(() => {
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart.value, i))
   return settings.showWorkWeek ? days.slice(0, 5) : days

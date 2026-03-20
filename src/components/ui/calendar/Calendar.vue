@@ -29,16 +29,18 @@ const props = withDefaults(
       class?: HTMLAttributes['class']
       layout?: LayoutTypes
       yearRange?: DateValue[]
+      showWorkWeek?: boolean
     }
   >(),
   {
     modelValue: undefined,
     layout: undefined,
+    showWorkWeek: false,
   },
 )
 const emits = defineEmits<CalendarRootEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class', 'layout', 'placeholder')
+const delegatedProps = reactiveOmit(props, 'class', 'layout', 'placeholder', 'showWorkWeek')
 
 const placeholder = useVModel(props, 'placeholder', emits, {
   passive: true,
@@ -186,7 +188,12 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       <CalendarGrid v-for="month in grid" :key="month.value.toString()">
         <CalendarGridHead>
           <CalendarGridRow>
-            <CalendarHeadCell v-for="day in weekDays" :key="day">
+            <CalendarHeadCell 
+              v-for="(day, index) in (props.showWorkWeek 
+                ? weekDays.filter((_, i) => forwarded.weekStartsOn === 1 ? i < 5 : (i >= 1 && i <= 5))
+                : weekDays)" 
+              :key="index"
+            >
               {{ day }}
             </CalendarHeadCell>
           </CalendarGridRow>
@@ -197,7 +204,16 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
             :key="`weekDate-${index}`"
             class="mt-2 w-full"
           >
-            <CalendarCell v-for="weekDate in weekDates" :key="weekDate.toString()" :date="weekDate">
+            <CalendarCell 
+              v-for="weekDate in (props.showWorkWeek 
+                ? weekDates.filter(d => {
+                    const day = toDate(d).getDay();
+                    return day !== 0 && day !== 6;
+                  })
+                : weekDates)" 
+              :key="weekDate.toString()" 
+              :date="weekDate"
+            >
               <slot name="day" :date="weekDate" :month="month.value">
                 <CalendarCellTrigger :day="weekDate" :month="month.value"/>
               </slot>
@@ -208,3 +224,4 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     </div>
   </CalendarRoot>
 </template>
+

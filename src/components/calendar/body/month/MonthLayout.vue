@@ -28,8 +28,8 @@ const { events } = defineProps<{
 const settings = useCalendarSettings()
 
 const days = computed(() => {
-  const start = startOfWeek(startOfMonth(date.value), { weekStartsOn: 1 })
-  const end = endOfWeek(endOfMonth(date.value), { weekStartsOn: 1 })
+  const start = startOfWeek(startOfMonth(date.value), { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 })
+  const end = endOfWeek(endOfMonth(date.value), { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 })
   const allDays = eachDayOfInterval({ start, end })
   
   if (settings.showWorkWeek) {
@@ -42,7 +42,7 @@ const days = computed(() => {
 })
 
 const weekDayHeaders = computed(() => {
-  const start = startOfWeek(new Date(), { weekStartsOn: 1 })
+  const start = startOfWeek(new Date(), { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 })
   const days = Array.from({ length: 7 }, (_, i) => addDays(start, i))
   return (settings.showWorkWeek ? days.slice(0, 5) : days).map(d => format(d, 'EEE'))
 })

@@ -7,11 +7,14 @@ import { CalendarDate } from '@internationalized/date'
 import { Calendar, CalendarCellTrigger } from '@/components/ui/calendar'
 import SidebarEventCard from './SidebarEventCard.vue'
 import type { CalendarEvent } from '../../calendar.types'
+import { useCalendarSettings } from '@/stores/calendarSettings'
 
 const date = defineModel<Date>('date', { required: true })
 const { events } = defineProps<{
   events: CalendarEvent[]
 }>()
+
+const settings = useCalendarSettings()
 
 // Convert Date to DateValue for the shadcn Calendar
 const calendarValue = computed({
@@ -37,6 +40,8 @@ const hasEvents = (day: DateValue) => {
   <aside class="hidden lg:flex w-80 border-l bg-background flex-col h-full overflow-y-auto p-4 gap-6 shrink-0">
     <Calendar
       v-model="calendarValue"
+      :week-starts-on="settings.startWeekOnSunday ? 0 : 1"
+      :show-work-week="settings.showWorkWeek"
       class="border rounded-xl shadow-sm"
     >
       <template #day="{ date: day, month }">
