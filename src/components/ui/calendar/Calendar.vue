@@ -198,7 +198,9 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
             class="mt-2 w-full"
           >
             <CalendarCell v-for="weekDate in weekDates" :key="weekDate.toString()" :date="weekDate">
-              <CalendarCellTrigger :day="weekDate" :month="month.value"/>
+              <slot name="day" :date="weekDate" :month="month.value">
+                <CalendarCellTrigger :day="weekDate" :month="month.value"/>
+              </slot>
             </CalendarCell>
           </CalendarGridRow>
         </CalendarGridBody>

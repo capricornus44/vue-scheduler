@@ -5,12 +5,12 @@ import Timeline from '../day/Timeline.vue'
 import DayContent from '../day/DayContent.vue'
 import type { CalendarEvent } from '../../calendar.types'
 
-const { date, events } = defineProps<{
-  date: Date
+const date = defineModel<Date>('date', { required: true })
+const { events } = defineProps<{
   events: CalendarEvent[]
 }>()
 
-const weekStart = startOfWeek(date, { weekStartsOn: 1 })
+const weekStart = startOfWeek(date.value, { weekStartsOn: 1 })
 const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
 </script>
 
