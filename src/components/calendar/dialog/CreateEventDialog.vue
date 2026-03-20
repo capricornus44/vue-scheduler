@@ -109,6 +109,14 @@ const onSubmit = form.handleSubmit(
     open.value = false;
   }
 );
+
+const onDelete = () => {
+  if (event) {
+    console.log('Deleting event:', event.id);
+    form.resetForm();
+    open.value = false;
+  }
+}
 </script>
 
 <template>
@@ -131,25 +139,25 @@ const onSubmit = form.handleSubmit(
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ field }" name="start">
-        <FormItem>
-          <FormLabel class="font-bold">Start Date</FormLabel>
-          <FormControl>
-            <DateTimePicker :field="field" />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
+        <FormField v-slot="{ field }" name="start">
+          <FormItem>
+            <FormLabel class="font-bold">Start Date</FormLabel>
+            <FormControl>
+              <DateTimePicker :field="field" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
 
-      <FormField v-slot="{ field }" name="end">
-        <FormItem>
-          <FormLabel class="font-bold">End Date</FormLabel>
-          <FormControl>
-            <DateTimePicker :field="field" />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
+        <FormField v-slot="{ field }" name="end">
+          <FormItem>
+            <FormLabel class="font-bold">End Date</FormLabel>
+            <FormControl>
+              <DateTimePicker :field="field" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
 
       <FormField v-slot="{ field }" name="color">
         <FormItem>
@@ -161,9 +169,19 @@ const onSubmit = form.handleSubmit(
         </FormItem>
       </FormField>
 
-      <Button type="submit" class="bg-sky-500 hover:bg-sky-600 flex w-fit ml-auto text-white">
-        {{ event ? 'Update' : 'Create' }} Event
-      </Button>
+      <div class="flex items-center mt-10 gap-4 justify-end">
+        <Button
+          v-if="event"
+          type="button"
+          class="bg-red-500 hover:bg-red-600 text-white w-fit"
+          @click="onDelete"
+        >
+          Delete Event
+        </Button>
+        <Button type="submit" class="bg-sky-500 hover:bg-sky-600 text-white w-fit">
+          {{ event ? 'Update' : 'Create' }} Event
+        </Button>
+      </div>
     </form>
   </DialogContent>
 </template>
