@@ -4,6 +4,7 @@ import { startOfWeek, addDays } from 'date-fns'
 
 import Timeline from '../day/Timeline.vue'
 import DayContent from '../day/DayContent.vue'
+import CurrentTimeLine from '../day/CurrentTimeLine.vue'
 import type { CalendarEvent } from '../../calendar.types'
 import { useCalendarSettings } from '@/stores/calendarSettings'
 
@@ -35,6 +36,7 @@ const weekDays = computed(() => {
             <Timeline className="block md:hidden" />
             <DayContent :date="day" :events="events" />
           </div>
+          <CurrentTimeLine :date="weekDays" />
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@
 import Timeline from './Timeline.vue'
 import DayContent from './DayContent.vue'
 import CalendarSidebar from './CalendarSidebar.vue'
+import CurrentTimeLine from './CurrentTimeLine.vue'
 import type { CalendarEvent } from '../../calendar.types'
 
 const date = defineModel<Date>('date', { required: true })
@@ -17,6 +18,7 @@ const { events } = defineProps<{
         <div class="relative flex flex-1 divide-x">
           <Timeline />
           <DayContent :date="date" :events="events" />
+          <CurrentTimeLine :date="date" />
         </div>
       </div>
     </div>

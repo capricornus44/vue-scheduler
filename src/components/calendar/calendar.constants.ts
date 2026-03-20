@@ -1,3 +1,6 @@
+export const CALENDAR_HEADER_HEIGHT = 32
+export const CALENDAR_CELL_HEIGHT = 128
+
 export const CalendarViews = ['day', 'week', 'month'] as const
 export const Hours = Array.from({ length: 12 }, (_, i) => i + 1)
 export const Minutes = Array.from({ length: 12 }, (_, i) => i * 5)
