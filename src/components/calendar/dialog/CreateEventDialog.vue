@@ -19,7 +19,10 @@ import ColorPicker from '@/components/shared/ColorPicker.vue'
 import type { CalendarEvent } from '../calendar.types'
 
 const open = defineModel<boolean>('open', { required: true });
-const date = defineModel<Date>('date', { required: true });
+const date = defineModel<Date>('date', { required: false });
+const { event } = defineProps<{
+  event?: CalendarEvent
+}>()
 
 const eventSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -48,35 +51,60 @@ const form = useForm<FormData>({
   },
 });
 
-watch([() => date.value, () => open], ([newDate, isOpen]) => {
-  if (isOpen && newDate) {
-    const snappedDate = new Date(newDate)
-    snappedDate.setMinutes(Math.round(newDate.getMinutes() / 5) * 5)
-    snappedDate.setSeconds(0)
-    snappedDate.setMilliseconds(0)
+watch([() => open.value, () => event], ([isOpen, currentEvent]) => {
+  if (isOpen) {
+    if (currentEvent) {
+      // Editing mode
+      form.resetForm({
+        values: {
+          title: currentEvent.title,
+          start: currentEvent.start.toISOString(),
+          end: currentEvent.end.toISOString(),
+          color: currentEvent.color,
+        },
+      });
+    } else if (date.value) {
+      // Creation mode
+      const snappedDate = new Date(date.value)
+      snappedDate.setMinutes(Math.round(date.value.getMinutes() / 5) * 5)
+      snappedDate.setSeconds(0)
+      snappedDate.setMilliseconds(0)
 
-    form.resetForm({
-      values: {
-        title: '',
-        start: snappedDate.toISOString(),
-        end: snappedDate.toISOString(),
-        color: 'blue',
-      },
-    });
+      form.resetForm({
+        values: {
+          title: '',
+          start: snappedDate.toISOString(),
+          end: snappedDate.toISOString(),
+          color: 'blue',
+        },
+      });
+    }
   }
 }, { immediate: true });
 
 const onSubmit = form.handleSubmit(
   (values) => {
-    const newEvent: CalendarEvent = {
-      id: crypto.randomUUID(),
-      title: values.title,
-      start: new Date(values.start),
-      end: new Date(values.end),
-      color: values.color,
-      allDay: false,
+    if (event) {
+      // Update mode
+      console.log('Updating event:', {
+        ...event,
+        title: values.title,
+        start: new Date(values.start),
+        end: new Date(values.end),
+        color: values.color,
+      });
+    } else {
+      // Create mode
+      const newEvent: CalendarEvent = {
+        id: crypto.randomUUID(),
+        title: values.title,
+        start: new Date(values.start),
+        end: new Date(values.end),
+        color: values.color,
+        allDay: false,
+      }
+      console.log('Creating event:', newEvent);
     }
-    console.log(newEvent);
     form.resetForm();
     open.value = false;
   }
@@ -86,9 +114,9 @@ const onSubmit = form.handleSubmit(
 <template>
   <DialogContent>
     <DialogHeader>
-      <DialogTitle>Create event</DialogTitle>
+      <DialogTitle>{{ event ? 'Edit' : 'Create' }} event</DialogTitle>
       <DialogDescription>
-        Fill out the form below to add a new event to your calendar.
+        {{ event ? 'Modify the details of your event below.' : 'Fill out the form below to add a new event to your calendar.' }}
       </DialogDescription>
     </DialogHeader>
 
@@ -134,7 +162,7 @@ const onSubmit = form.handleSubmit(
       </FormField>
 
       <Button type="submit" class="bg-sky-500 hover:bg-sky-600 flex w-fit ml-auto text-white">
-        Create Event
+        {{ event ? 'Update' : 'Create' }} Event
       </Button>
     </form>
   </DialogContent>

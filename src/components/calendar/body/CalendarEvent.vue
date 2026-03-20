@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { format, isSameDay } from 'date-fns'
 
 import { cn } from '@/lib/utils'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import CreateEventDialog from '../dialog/CreateEventDialog.vue'
 import CalendarEventTooltip from './CalendarEventTooltip.vue'
 import type { CalendarEvent, CalendarEventPosition } from '../calendar.types'
 
@@ -66,36 +68,42 @@ const style = computed(() => {
   if (month) return {}
   return calculateEventPosition(event, events)
 })
+
+const isEditOpen = ref(false)
 </script>
 
 <template>
-  <CalendarEventTooltip :event="event" side="top">
-    <div
-      :class="cn(
-        `px-3 py-1.5 rounded-md truncate cursor-pointer transition-all duration-300 bg-${event.color}-500/10 hover:bg-${event.color}-500/20 border border-${event.color}-500 `,
-        !month && 'absolute',
-        className
-      )"
-      :style="style"
-      @click="() => { console.log(event) }"
-    >
-      <div
-        :class="cn(
-          `flex flex-col w-full text-${event.color}-500`,
-          month && 'flex-row items-center justify-between'
-        )"
-      >
-        <p :class="cn('font-bold truncate', month && 'text-xs')">
-          {{ event.title }}
-        </p>
-        <p :class="cn('text-sm truncate', month && 'text-xs')">
-          <span>{{ format(event.start, 'h:mm a') }}</span>
-          <span :class="cn('mx-1', month && 'hidden')">-</span>
-          <span :class="cn(month && 'hidden')">
-            {{ format(event.end, 'h:mm a') }}
-          </span>
-        </p>
-      </div>
-    </div>
-  </CalendarEventTooltip>
+  <Dialog v-model:open="isEditOpen">
+    <CalendarEventTooltip :event="event" side="top">
+      <DialogTrigger as-child>
+        <div
+          :class="cn(
+            `px-3 py-1.5 rounded-md truncate cursor-pointer transition-all duration-300 bg-${event.color}-500/10 hover:bg-${event.color}-500/20 border border-${event.color}-500 `,
+            !month && 'absolute',
+            className
+          )"
+          :style="style"
+        >
+          <div
+            :class="cn(
+              `flex flex-col w-full text-${event.color}-500`,
+              month && 'flex-row items-center justify-between'
+            )"
+          >
+            <p :class="cn('font-bold truncate', month && 'text-xs')">
+              {{ event.title }}
+            </p>
+            <p :class="cn('text-sm truncate', month && 'text-xs')">
+              <span>{{ format(event.start, 'h:mm a') }}</span>
+              <span :class="cn('mx-1', month && 'hidden')">-</span>
+              <span :class="cn(month && 'hidden')">
+                {{ format(event.end, 'h:mm a') }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </DialogTrigger>
+    </CalendarEventTooltip>
+    <CreateEventDialog v-model:open="isEditOpen" :event="event" />
+  </Dialog>
 </template>

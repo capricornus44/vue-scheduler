@@ -12,5 +12,5 @@ const events = ref<CalendarEvent[]>(generateMockEvents())
 
 <template>
   <CalendarHeader v-model:date="date" v-model:view="view" :events="events" />
-  <CalendarBody :view="view" :date="date" :events="events" />
+  <CalendarBody v-model:view="view" v-model:date="date" :events="events" />
 </template>

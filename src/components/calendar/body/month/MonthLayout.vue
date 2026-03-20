@@ -12,23 +12,29 @@ import {
 } from 'date-fns'
 
 import { cn } from '@/lib/utils'
-import CalendarEventTooltip from '../CalendarEventTooltip.vue'
+import MonthEventChip from './MonthEventChip.vue'
 
-import type { CalendarEvent } from '../../calendar.types'
+import type { CalendarEvent, CalendarView } from '../../calendar.types'
 
-const { date, events } = defineProps<{
-  date: Date
+const date = defineModel<Date>('date', { required: true })
+const view = defineModel<CalendarView>('view', { required: false })
+const { events } = defineProps<{
   events: CalendarEvent[]
 }>()
 
 const days = computed(() => {
-  const start = startOfWeek(startOfMonth(date), { weekStartsOn: 1 })
-  const end = endOfWeek(endOfMonth(date), { weekStartsOn: 1 })
+  const start = startOfWeek(startOfMonth(date.value), { weekStartsOn: 1 })
+  const end = endOfWeek(endOfMonth(date.value), { weekStartsOn: 1 })
   return eachDayOfInterval({ start, end })
 })
 
 const getDayEvents = (day: Date) => {
   return events.filter(event => isSameDay(event.start, day))
+}
+
+const handleDayClick = (day: Date) => {
+  date.value = day
+  view.value = 'day'
 }
 </script>
 
@@ -49,9 +55,10 @@ const getDayEvents = (day: Date) => {
         v-for="day in days"
         :key="day.toISOString()"
         :class="cn(
-          'min-h-[120px] p-2 border-r border-b flex flex-col gap-1 transition-colors',
+          'min-h-[120px] p-2 border-r border-b flex flex-col gap-1 transition-colors cursor-pointer',
           !isSameMonth(day, date) && 'bg-muted/80 text-muted-foreground/80 opacity-80'
         )"
+        @click="handleDayClick(day)"
       >
         <div class="flex justify-between items-start">
           <span
@@ -65,22 +72,11 @@ const getDayEvents = (day: Date) => {
         </div>
 
         <div class="flex flex-col gap-0.5 overflow-y-auto">
-          <CalendarEventTooltip
+          <MonthEventChip
             v-for="event in getDayEvents(day)"
             :key="event.id"
             :event="event"
-            side="top"
-          >
-            <div
-              :class="cn(
-                `px-1.5 py-0.5 text-[10px] rounded-sm truncate border-l-2 cursor-pointer`,
-                `bg-${event.color}-500/10 text-${event.color}-500 border-${event.color}-500`
-              )"
-              @click="() => { console.log(event) }"
-            >
-              {{ event.title }}
-            </div>
-          </CalendarEventTooltip>
+          />
         </div>
       </div>
     </div>
