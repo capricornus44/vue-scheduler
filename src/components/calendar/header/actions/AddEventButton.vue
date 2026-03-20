@@ -4,7 +4,7 @@ import { Plus } from 'lucide-vue-next'
 
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import Button from '@/components/ui/button/Button.vue'
-import CreateEventDialog from '@/components/calendar/dialog/CreateEventDialog.vue'
+import EventDialog from '@/components/calendar/dialog/EventDialog.vue'
 
 const open = ref(false)
 const date = defineModel<Date>('date', { required: true })
@@ -18,6 +18,6 @@ const date = defineModel<Date>('date', { required: true })
         Add Event
       </Button>
     </DialogTrigger>
-    <CreateEventDialog v-model:date="date" v-model:open="open" />
+    <EventDialog v-model:date="date" v-model:open="open" />
   </Dialog>
 </template>

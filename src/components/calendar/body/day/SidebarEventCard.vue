@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { format } from 'date-fns'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
-import CreateEventDialog from '../dialog/CreateEventDialog.vue'
-import type { CalendarEvent } from '../calendar.types'
+import EventDialog from '../../dialog/EventDialog.vue'
+import type { CalendarEvent } from '../../calendar.types'
 
 const { event } = defineProps<{
   event: CalendarEvent
@@ -40,6 +40,6 @@ const isEditOpen = ref(false)
         </p>
       </div>
     </DialogTrigger>
-    <CreateEventDialog v-model:open="isEditOpen" :event="event" />
+    <EventDialog v-model:open="isEditOpen" :event="event" />
   </Dialog>
 </template>

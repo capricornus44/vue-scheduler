@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { cn } from '@/lib/utils'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import CreateEventDialog from '../../dialog/CreateEventDialog.vue'
+import EventDialog from '../../dialog/EventDialog.vue'
 import CalendarEventTooltip from '../CalendarEventTooltip.vue'
 import type { CalendarEvent } from '../../calendar.types'
 
@@ -30,6 +30,6 @@ const isEditOpen = ref(false)
         </Button>
       </DialogTrigger>
     </CalendarEventTooltip>
-    <CreateEventDialog v-model:open="isEditOpen" :event="event" />
+    <EventDialog v-model:open="isEditOpen" :event="event" />
   </Dialog>
 </template>

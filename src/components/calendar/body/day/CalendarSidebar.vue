@@ -6,7 +6,7 @@ import { toDate } from 'reka-ui/date'
 import { CalendarDate } from '@internationalized/date'
 import { Calendar, CalendarCellTrigger } from '@/components/ui/calendar'
 import SidebarEventCard from './SidebarEventCard.vue'
-import type { CalendarEvent } from '../calendar.types'
+import type { CalendarEvent } from '../../calendar.types'
 
 const date = defineModel<Date>('date', { required: true })
 const { events } = defineProps<{

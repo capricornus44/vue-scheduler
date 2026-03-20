@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Timeline from './Timeline.vue'
 import DayContent from './DayContent.vue'
-import CalendarSidebar from '../CalendarSidebar.vue'
+import CalendarSidebar from './CalendarSidebar.vue'
 import type { CalendarEvent } from '../../calendar.types'
 
 const date = defineModel<Date>('date', { required: true })

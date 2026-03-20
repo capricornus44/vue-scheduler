@@ -4,7 +4,7 @@ import { format, isSameDay } from 'date-fns'
 
 import { cn } from '@/lib/utils'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
-import CreateEventDialog from '../dialog/CreateEventDialog.vue'
+import EventDialog from '../dialog/EventDialog.vue'
 import CalendarEventTooltip from './CalendarEventTooltip.vue'
 import type { CalendarEvent, CalendarEventPosition } from '../calendar.types'
 
@@ -104,6 +104,6 @@ const isEditOpen = ref(false)
         </div>
       </DialogTrigger>
     </CalendarEventTooltip>
-    <CreateEventDialog v-model:open="isEditOpen" :event="event" />
+    <EventDialog v-model:open="isEditOpen" :event="event" />
   </Dialog>
 </template>

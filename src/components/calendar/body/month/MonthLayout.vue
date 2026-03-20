@@ -12,7 +12,7 @@ import {
 } from 'date-fns'
 
 import { cn } from '@/lib/utils'
-import MonthEventChip from './MonthEventChip.vue'
+import MonthEventCard from './MonthEventCard.vue'
 
 import type { CalendarEvent, CalendarView } from '../../calendar.types'
 
@@ -72,7 +72,7 @@ const handleDayClick = (day: Date) => {
         </div>
 
         <div class="flex flex-col gap-0.5 overflow-y-auto">
-          <MonthEventChip
+          <MonthEventCard
             v-for="event in getDayEvents(day)"
             :key="event.id"
             :event="event"
