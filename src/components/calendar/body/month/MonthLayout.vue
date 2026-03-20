@@ -9,10 +9,13 @@ import {
   isSameMonth,
   isSameDay,
   format,
+  getDay,
+  addDays,
 } from 'date-fns'
 
 import { cn } from '@/lib/utils'
 import MonthEventCard from './MonthEventCard.vue'
+import { useCalendarSettings } from '@/stores/calendarSettings'
 
 import type { CalendarEvent, CalendarView } from '../../calendar.types'
 
@@ -22,10 +25,26 @@ const { events } = defineProps<{
   events: CalendarEvent[]
 }>()
 
+const settings = useCalendarSettings()
+
 const days = computed(() => {
   const start = startOfWeek(startOfMonth(date.value), { weekStartsOn: 1 })
   const end = endOfWeek(endOfMonth(date.value), { weekStartsOn: 1 })
-  return eachDayOfInterval({ start, end })
+  const allDays = eachDayOfInterval({ start, end })
+  
+  if (settings.showWorkWeek) {
+    return allDays.filter(day => {
+      const d = getDay(day)
+      return d !== 0 && d !== 6
+    })
+  }
+  return allDays
+})
+
+const weekDayHeaders = computed(() => {
+  const start = startOfWeek(new Date(), { weekStartsOn: 1 })
+  const days = Array.from({ length: 7 }, (_, i) => addDays(start, i))
+  return (settings.showWorkWeek ? days.slice(0, 5) : days).map(d => format(d, 'EEE'))
 })
 
 const getDayEvents = (day: Date) => {
@@ -40,17 +59,17 @@ const handleDayClick = (day: Date) => {
 
 <template>
   <div class="flex flex-col grow overflow-hidden border-t">
-    <div class="grid grid-cols-7 border-b bg-muted/50">
+    <div :class="['grid border-b bg-background sticky top-0 z-10 h-8 items-center', settings.showWorkWeek ? 'grid-cols-5' : 'grid-cols-7']">
       <div
-        v-for="day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']"
-        :key="day"
-        class="py-2 text-center text-xs font-medium text-muted-foreground"
+        v-for="dayName in weekDayHeaders"
+        :key="dayName"
+        class="text-center text-xs font-medium text-muted-foreground"
       >
-        {{ day }}
+        {{ dayName }}
       </div>
     </div>
 
-    <div class="grid grid-cols-7 grow overflow-y-auto">
+    <div :class="['grid grow overflow-y-auto px-0.5', settings.showWorkWeek ? 'grid-cols-5' : 'grid-cols-7']">
       <div
         v-for="day in days"
         :key="day.toISOString()"
