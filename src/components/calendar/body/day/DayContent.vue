@@ -7,6 +7,7 @@ import Event from '../CalendarEvent.vue';
 import type { CalendarEvent } from '../../calendar.types';
 import { TimelineHours, CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT } from '../../calendar.constants';
 import { useCalendarSettings } from '@/stores/calendarSettings';
+import { isWorkingHour } from '@/lib/calendar';
 
 const { date, events } = defineProps<{
   date: Date
@@ -26,10 +27,13 @@ const dayEvents = computed(() => {
     <CalendarBodyHeader :date="date" />
 
     <div class="flex-1 relative">
-      <div 
-        v-for="hour in TimelineHours" 
-        :key="hour" 
-        class="border-b border-border/50 group" 
+      <div
+        v-for="hour in TimelineHours"
+        :key="hour"
+        :class="[
+          'border-b border-border/50 group transition-colors',
+          settings.showWorkingHours && !isWorkingHour(hour) && 'bg-muted/30 opacity-80'
+        ]"
         :style="{ height: `${cellHeight}px` }"
       />
 

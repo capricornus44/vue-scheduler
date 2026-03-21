@@ -41,7 +41,7 @@ const hasEvents = (day: DateValue) => {
     <Calendar
       v-model="calendarValue"
       :week-starts-on="settings.startWeekOnSunday ? 0 : 1"
-      :show-work-week="settings.showWorkWeek"
+      :show-work-week="settings.hideWeekends"
       class="border rounded-xl shadow-sm"
     >
       <template #day="{ date: day, month }">

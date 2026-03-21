@@ -31,8 +31,8 @@ const days = computed(() => {
   const start = startOfWeek(startOfMonth(date.value), { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 })
   const end = endOfWeek(endOfMonth(date.value), { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 })
   const allDays = eachDayOfInterval({ start, end })
-  
-  if (settings.showWorkWeek) {
+
+  if (settings.hideWeekends) {
     return allDays.filter(day => {
       const d = getDay(day)
       return d !== 0 && d !== 6
@@ -44,7 +44,7 @@ const days = computed(() => {
 const weekDayHeaders = computed(() => {
   const start = startOfWeek(new Date(), { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 })
   const days = Array.from({ length: 7 }, (_, i) => addDays(start, i))
-  return (settings.showWorkWeek ? days.slice(0, 5) : days).map(d => format(d, 'EEE'))
+  return (settings.hideWeekends ? days.slice(0, 5) : days).map(d => format(d, 'EEE'))
 })
 
 const getDayEvents = (day: Date) => {
@@ -59,7 +59,7 @@ const handleDayClick = (day: Date) => {
 
 <template>
   <div class="flex flex-col grow overflow-hidden border-t">
-    <div :class="['grid border-b bg-background sticky top-0 z-10 h-8 items-center', settings.showWorkWeek ? 'grid-cols-5' : 'grid-cols-7']">
+    <div :class="['grid border-b bg-background sticky top-0 z-10 h-8 items-center', settings.hideWeekends ? 'grid-cols-5' : 'grid-cols-7']">
       <div
         v-for="dayName in weekDayHeaders"
         :key="dayName"
@@ -69,7 +69,7 @@ const handleDayClick = (day: Date) => {
       </div>
     </div>
 
-    <div :class="['grid grow overflow-y-auto px-0.5', settings.showWorkWeek ? 'grid-cols-5' : 'grid-cols-7']">
+    <div :class="['grid grow overflow-y-auto px-0.5', settings.hideWeekends ? 'grid-cols-5' : 'grid-cols-7']">
       <div
         v-for="day in days"
         :key="day.toISOString()"

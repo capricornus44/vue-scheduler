@@ -4,9 +4,8 @@ import AppHeader from '../components/shared/AppHeader.vue'
 </script>
 
 <template>
-  <main>
+  <main class="h-screen flex flex-col overflow-hidden bg-background">
     <AppHeader />
     <Calendar />
   </main>
 </template>
-``

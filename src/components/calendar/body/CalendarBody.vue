@@ -12,8 +12,10 @@ const { events } = defineProps<{
 </script>
 
 <template>
-  <DayLayout v-if="view === 'day'" v-model:date="date" :events="events" />
-  <WeekLayout v-if="view === 'week'" v-model:date="date" :events="events" />
-  <MonthLayout v-if="view === 'month'" v-model:view="view" v-model:date="date" :events="events" />
+  <div class="flex flex-col flex-1 overflow-hidden">
+    <DayLayout v-if="view === 'day'" v-model:date="date" :events="events" />
+    <WeekLayout v-if="view === 'week'" v-model:date="date" :events="events" />
+    <MonthLayout v-if="view === 'month'" v-model:view="view" v-model:date="date" :events="events" />
+  </div>
 </template>
 

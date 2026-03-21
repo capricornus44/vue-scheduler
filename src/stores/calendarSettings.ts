@@ -2,8 +2,9 @@ import { defineStore } from 'pinia'
 
 export const useCalendarSettings = defineStore('calendarSettings', {
   state: () => ({
-    showWorkWeek: false,
+    hideWeekends: false,
     startWeekOnSunday: false,
     compactView: false,
+    showWorkingHours: false,
   }),
 })

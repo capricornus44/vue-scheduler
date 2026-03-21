@@ -29,18 +29,18 @@ const props = withDefaults(
       class?: HTMLAttributes['class']
       layout?: LayoutTypes
       yearRange?: DateValue[]
-      showWorkWeek?: boolean
+      hideWeekends?: boolean
     }
   >(),
   {
     modelValue: undefined,
     layout: undefined,
-    showWorkWeek: false,
+    hideWeekends: false,
   },
 )
 const emits = defineEmits<CalendarRootEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class', 'layout', 'placeholder', 'showWorkWeek')
+const delegatedProps = reactiveOmit(props, 'class', 'layout', 'placeholder', 'hideWeekends')
 
 const placeholder = useVModel(props, 'placeholder', emits, {
   passive: true,
@@ -188,10 +188,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       <CalendarGrid v-for="month in grid" :key="month.value.toString()">
         <CalendarGridHead>
           <CalendarGridRow>
-            <CalendarHeadCell 
-              v-for="(day, index) in (props.showWorkWeek 
+            <CalendarHeadCell
+              v-for="(day, index) in (props.hideWeekends
                 ? weekDays.filter((_, i) => forwarded.weekStartsOn === 1 ? i < 5 : (i >= 1 && i <= 5))
-                : weekDays)" 
+                : weekDays)"
               :key="index"
             >
               {{ day }}
@@ -204,14 +204,14 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
             :key="`weekDate-${index}`"
             class="mt-2 w-full"
           >
-            <CalendarCell 
-              v-for="weekDate in (props.showWorkWeek 
+            <CalendarCell
+              v-for="weekDate in (props.hideWeekends
                 ? weekDates.filter(d => {
                     const day = toDate(d).getDay();
                     return day !== 0 && day !== 6;
                   })
-                : weekDates)" 
-              :key="weekDate.toString()" 
+                : weekDates)"
+              :key="weekDate.toString()"
               :date="weekDate"
             >
               <slot name="day" :date="weekDate" :month="month.value">

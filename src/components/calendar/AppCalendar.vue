@@ -11,6 +11,8 @@ const events = ref<CalendarEvent[]>(generateMockEvents())
 </script>
 
 <template>
-  <CalendarHeader v-model:date="date" v-model:view="view" :events="events" />
-  <CalendarBody v-model:view="view" v-model:date="date" :events="events" />
+  <div class="flex flex-col flex-1 overflow-hidden">
+    <CalendarHeader v-model:date="date" v-model:view="view" :events="events" />
+    <CalendarBody v-model:view="view" v-model:date="date" :events="events" />
+  </div>
 </template>
