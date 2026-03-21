@@ -2,18 +2,19 @@
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import type { CalendarView } from '../../calendar.types'
 import { CalendarViews } from '../../calendar.constants'
+import { useCalendarStore } from '@/stores/calendarStore'
 
-const view = defineModel<CalendarView>('view', { required: true })
+const store = useCalendarStore()
 </script>
 
 <template>
   <ToggleGroup
     type="single"
     variant="outline"
-    :model-value="view"
+    :model-value="store.view"
     @update:model-value="
       (val) => {
-        if (val) view = val as CalendarView
+        if (val) store.view = val as CalendarView
       }
     "
   >

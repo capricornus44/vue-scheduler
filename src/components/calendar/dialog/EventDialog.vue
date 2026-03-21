@@ -17,12 +17,14 @@ import { Button } from '@/components/ui/button'
 import DateTimePicker from '@/components/shared/DateTimePicker.vue'
 import ColorPicker from '@/components/shared/ColorPicker.vue'
 import type { CalendarEvent } from '../calendar.types'
+import { useCalendarStore } from '@/stores/calendarStore'
 
 const open = defineModel<boolean>('open', { required: true });
-const date = defineModel<Date>('date', { required: false });
 const { event } = defineProps<{
   event?: CalendarEvent
 }>()
+
+const store = useCalendarStore()
 
 const eventSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -45,8 +47,8 @@ const form = useForm<FormData>({
   validationSchema,
   initialValues: {
     title: '',
-    start: date.value?.toISOString(),
-    end: date.value?.toISOString(),
+    start: store.date?.toISOString(),
+    end: store.date?.toISOString(),
     color: 'blue',
   },
 });
@@ -63,10 +65,10 @@ watch([() => open.value, () => event], ([isOpen, currentEvent]) => {
           color: currentEvent.color,
         },
       });
-    } else if (date.value) {
-      // Creation mode
-      const snappedDate = new Date(date.value)
-      snappedDate.setMinutes(Math.round(date.value.getMinutes() / 5) * 5)
+    } else {
+      // Creation mode — snap to nearest 5 minutes
+      const snappedDate = new Date(store.date)
+      snappedDate.setMinutes(Math.round(store.date.getMinutes() / 5) * 5)
       snappedDate.setSeconds(0)
       snappedDate.setMilliseconds(0)
 
@@ -85,8 +87,7 @@ watch([() => open.value, () => event], ([isOpen, currentEvent]) => {
 const onSubmit = form.handleSubmit(
   (values) => {
     if (event) {
-      // Update mode
-      console.log('Updating event:', {
+      store.updateEvent({
         ...event,
         title: values.title,
         start: new Date(values.start),
@@ -94,16 +95,14 @@ const onSubmit = form.handleSubmit(
         color: values.color,
       });
     } else {
-      // Create mode
-      const newEvent: CalendarEvent = {
+      store.addEvent({
         id: crypto.randomUUID(),
         title: values.title,
         start: new Date(values.start),
         end: new Date(values.end),
         color: values.color,
         allDay: false,
-      }
-      console.log('Creating event:', newEvent);
+      });
     }
     form.resetForm();
     open.value = false;
@@ -112,7 +111,7 @@ const onSubmit = form.handleSubmit(
 
 const onDelete = () => {
   if (event) {
-    console.log('Deleting event:', event.id);
+    store.deleteEvent(event.id);
     form.resetForm();
     open.value = false;
   }

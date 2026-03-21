@@ -4,25 +4,20 @@ import { format } from 'date-fns'
 import EventCount from './EventCount.vue'
 import DateNavigation from './DateNavigation.vue'
 import CurrentDateIcon from './CurrentDateIcon.vue'
-import type { CalendarEvent, CalendarView } from '../../calendar.types'
+import { useCalendarStore } from '@/stores/calendarStore'
 
-const date = defineModel<Date>('date', { required: true })
-
-const { view, events } = defineProps<{
-  view: CalendarView
-  events: CalendarEvent[]
-}>()
+const store = useCalendarStore()
 </script>
 
 <template>
   <div class="flex gap-3">
-    <CurrentDateIcon @click="date = new Date()" />
+    <CurrentDateIcon @click="store.date = new Date()" />
     <div class="flex flex-col justify-between">
       <div class="flex items-center justify-between">
-        <p class="text-lg font-semibold">{{ format(date, 'MMMM yyyy') }}</p>
-        <EventCount :events="events" :date="date" />
+        <p class="text-lg font-semibold">{{ format(store.date, 'MMMM yyyy') }}</p>
+        <EventCount />
       </div>
-      <DateNavigation v-model:date="date" :view="view" />
+      <DateNavigation />
     </div>
   </div>
 </template>

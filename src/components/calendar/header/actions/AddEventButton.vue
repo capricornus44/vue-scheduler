@@ -5,19 +5,20 @@ import { Plus } from 'lucide-vue-next'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import Button from '@/components/ui/button/Button.vue'
 import EventDialog from '@/components/calendar/dialog/EventDialog.vue'
+import { useCalendarStore } from '@/stores/calendarStore'
 
+const store = useCalendarStore()
 const open = ref(false)
-const date = defineModel<Date>('date', { required: true })
 </script>
 
 <template>
-  <Dialog v-model:open="open" @update:open="(val) => { if (val) date = new Date() }">
+  <Dialog v-model:open="open" @update:open="(val) => { if (val) store.date = new Date() }">
     <DialogTrigger as-child>
       <Button class="flex items-center gap-1 bg-sky-500 text-white hover:bg-sky-600">
         <Plus />
         Add Event
       </Button>
     </DialogTrigger>
-    <EventDialog v-model:date="date" v-model:open="open" />
+    <EventDialog v-model:open="open" />
   </Dialog>
 </template>

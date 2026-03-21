@@ -4,16 +4,12 @@ import Timeline from './Timeline.vue'
 import DayContent from './DayContent.vue'
 import CalendarSidebar from './CalendarSidebar.vue'
 import CurrentTimeLine from './CurrentTimeLine.vue'
-import type { CalendarEvent } from '../../calendar.types'
 import { CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT } from '../../calendar.constants'
 import { useCalendarSettings } from '@/stores/calendarSettings'
+import { useCalendarStore } from '@/stores/calendarStore'
 import { scrollToWorkingHours } from '@/lib/calendar'
 
-const date = defineModel<Date>('date', { required: true })
-const { events } = defineProps<{
-  events: CalendarEvent[]
-}>()
-
+const store = useCalendarStore()
 const settings = useCalendarSettings()
 const scrollContainer = ref<HTMLElement | null>(null)
 const cellHeight = computed(() => settings.compactView ? CALENDAR_COMPACT_CELL_HEIGHT : CALENDAR_CELL_HEIGHT)
@@ -33,11 +29,11 @@ watch([() => settings.showWorkingHours, cellHeight], ([show]) => {
       <div ref="scrollContainer" class="flex flex-col grow overflow-y-auto">
         <div class="relative flex flex-1 divide-x">
           <Timeline />
-          <DayContent :date="date" :events="events" />
-          <CurrentTimeLine :date="date" />
+          <DayContent :date="store.date" :events="store.events" />
+          <CurrentTimeLine :date="store.date" />
         </div>
       </div>
     </div>
-    <CalendarSidebar v-model:date="date" :events="events" />
+    <CalendarSidebar />
   </div>
 </template>

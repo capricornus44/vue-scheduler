@@ -16,20 +16,14 @@ import {
 import { cn } from '@/lib/utils'
 import MonthEventCard from './MonthEventCard.vue'
 import { useCalendarSettings } from '@/stores/calendarSettings'
+import { useCalendarStore } from '@/stores/calendarStore'
 
-import type { CalendarEvent, CalendarView } from '../../calendar.types'
-
-const date = defineModel<Date>('date', { required: true })
-const view = defineModel<CalendarView>('view', { required: false })
-const { events } = defineProps<{
-  events: CalendarEvent[]
-}>()
-
+const store = useCalendarStore()
 const settings = useCalendarSettings()
 
 const days = computed(() => {
-  const start = startOfWeek(startOfMonth(date.value), { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 })
-  const end = endOfWeek(endOfMonth(date.value), { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 })
+  const start = startOfWeek(startOfMonth(store.date), { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 })
+  const end = endOfWeek(endOfMonth(store.date), { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 })
   const allDays = eachDayOfInterval({ start, end })
 
   if (settings.hideWeekends) {
@@ -48,12 +42,12 @@ const weekDayHeaders = computed(() => {
 })
 
 const getDayEvents = (day: Date) => {
-  return events.filter(event => isSameDay(event.start, day))
+  return store.events.filter(event => isSameDay(event.start, day))
 }
 
 const handleDayClick = (day: Date) => {
-  date.value = day
-  view.value = 'day'
+  store.date = day
+  store.view = 'day'
 }
 </script>
 
@@ -75,7 +69,7 @@ const handleDayClick = (day: Date) => {
         :key="day.toISOString()"
         :class="cn(
           'min-h-[120px] p-2 border-r border-b flex flex-col gap-1 transition-colors cursor-pointer',
-          !isSameMonth(day, date) && 'bg-muted/80 text-muted-foreground/80 opacity-80'
+          !isSameMonth(day, store.date) && 'bg-muted/80 text-muted-foreground/80 opacity-80'
         )"
         @click="handleDayClick(day)"
       >

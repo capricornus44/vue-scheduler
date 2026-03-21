@@ -4,39 +4,36 @@ import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import { format, addDays, addMonths, addWeeks, subDays, subMonths, subWeeks } from 'date-fns'
 
 import Button from '@/components/ui/button/Button.vue'
-import type { CalendarView } from '../../calendar.types'
+import { useCalendarStore } from '@/stores/calendarStore'
 
-const date = defineModel<Date>('date', { required: true })
-const { view } = defineProps<{
-  view: CalendarView
-}>()
+const store = useCalendarStore()
 
-const formattedDate = computed(() => format(date.value, 'MMMM d, yyyy'))
+const formattedDate = computed(() => format(store.date, 'MMMM d, yyyy'))
 
 const handleDateBackward = () => {
-  switch (view) {
+  switch (store.view) {
     case 'month':
-      date.value = subMonths(date.value, 1)
+      store.date = subMonths(store.date, 1)
       break
     case 'week':
-      date.value = subWeeks(date.value, 1)
+      store.date = subWeeks(store.date, 1)
       break
     case 'day':
-      date.value = subDays(date.value, 1)
+      store.date = subDays(store.date, 1)
       break
   }
 }
 
 const handleDateForward = () => {
-  switch (view) {
+  switch (store.view) {
     case 'month':
-      date.value = addMonths(date.value, 1)
+      store.date = addMonths(store.date, 1)
       break
     case 'week':
-      date.value = addWeeks(date.value, 1)
+      store.date = addWeeks(store.date, 1)
       break
     case 'day':
-      date.value = addDays(date.value, 1)
+      store.date = addDays(store.date, 1)
       break
   }
 }

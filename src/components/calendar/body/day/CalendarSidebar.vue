@@ -6,33 +6,29 @@ import { toDate } from 'reka-ui/date'
 import { CalendarDate } from '@internationalized/date'
 import { Calendar, CalendarCellTrigger } from '@/components/ui/calendar'
 import SidebarEventCard from './SidebarEventCard.vue'
-import type { CalendarEvent } from '../../calendar.types'
 import { useCalendarSettings } from '@/stores/calendarSettings'
+import { useCalendarStore } from '@/stores/calendarStore'
 
-const date = defineModel<Date>('date', { required: true })
-const { events } = defineProps<{
-  events: CalendarEvent[]
-}>()
-
+const store = useCalendarStore()
 const settings = useCalendarSettings()
 
 // Convert Date to DateValue for the shadcn Calendar
 const calendarValue = computed({
-  get: () => new CalendarDate(date.value.getFullYear(), date.value.getMonth() + 1, date.value.getDate()),
+  get: () => new CalendarDate(store.date.getFullYear(), store.date.getMonth() + 1, store.date.getDate()),
   set: (val) => {
     if (val) {
-      date.value = toDate(val)
+      store.date = toDate(val)
     }
   },
 })
 
 const dayEvents = computed(() => {
-  return events.filter(event => isSameDay(event.start, date.value))
+  return store.events.filter(event => isSameDay(event.start, store.date))
 })
 
 const hasEvents = (day: DateValue) => {
   const nativeDate = toDate(day)
-  return events.some(event => isSameDay(event.start, nativeDate))
+  return store.events.some(event => isSameDay(event.start, nativeDate))
 }
 </script>
 
