@@ -18,6 +18,8 @@ import DateTimePicker from '@/components/shared/DateTimePicker.vue'
 import ColorPicker from '@/components/shared/ColorPicker.vue'
 import type { CalendarEvent } from '../calendar.types'
 import { useCalendarStore } from '@/stores/calendarStore'
+import SubmitLoader from '@/components/shared/SubmitLoader.vue'
+import { ref } from 'vue'
 
 const open = defineModel<boolean>('open', { required: true });
 const { event } = defineProps<{
@@ -84,36 +86,49 @@ watch([() => open.value, () => event], ([isOpen, currentEvent]) => {
   }
 }, { immediate: true });
 
+const isSubmitting = ref(false)
+const isDeleting = ref(false)
+
 const onSubmit = form.handleSubmit(
-  (values) => {
-    if (event) {
-      store.updateEvent({
-        ...event,
-        title: values.title,
-        start: new Date(values.start),
-        end: new Date(values.end),
-        color: values.color,
-      });
-    } else {
-      store.addEvent({
-        id: crypto.randomUUID(),
-        title: values.title,
-        start: new Date(values.start),
-        end: new Date(values.end),
-        color: values.color,
-        allDay: false,
-      });
+  async (values) => {
+    isSubmitting.value = true
+    try {
+      if (event) {
+        await store.updateEvent({
+          ...event,
+          title: values.title,
+          start: new Date(values.start),
+          end: new Date(values.end),
+          color: values.color,
+        });
+      } else {
+        await store.addEvent({
+          id: crypto.randomUUID(),
+          title: values.title,
+          start: new Date(values.start),
+          end: new Date(values.end),
+          color: values.color,
+          allDay: false,
+        });
+      }
+      form.resetForm();
+      open.value = false;
+    } finally {
+      isSubmitting.value = false
     }
-    form.resetForm();
-    open.value = false;
   }
 );
 
-const onDelete = () => {
+const onDelete = async () => {
   if (event) {
-    store.deleteEvent(event.id);
-    form.resetForm();
-    open.value = false;
+    isDeleting.value = true
+    try {
+      await store.deleteEvent(event.id);
+      form.resetForm();
+      open.value = false;
+    } finally {
+      isDeleting.value = false
+    }
   }
 }
 </script>
@@ -173,11 +188,14 @@ const onDelete = () => {
           v-if="event"
           type="button"
           class="bg-red-500 hover:bg-red-600 text-white w-fit"
+          :disabled="isSubmitting || isDeleting"
           @click="onDelete"
         >
+          <SubmitLoader :isLoading="isDeleting" />
           Delete Event
         </Button>
-        <Button type="submit" class="bg-sky-500 hover:bg-sky-600 text-white w-fit">
+        <Button type="submit" class="bg-sky-500 hover:bg-sky-600 text-white w-fit" :disabled="isSubmitting || isDeleting">
+          <SubmitLoader :isLoading="isSubmitting" />
           {{ event ? 'Update' : 'Create' }} Event
         </Button>
       </div>

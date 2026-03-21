@@ -8,16 +8,21 @@ export const useCalendarStore = defineStore('calendar', () => {
   const date = ref<Date>(new Date())
   const events = ref<CalendarEvent[]>(generateMockEvents())
 
-  const addEvent = (event: CalendarEvent) => {
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+  const addEvent = async (event: CalendarEvent) => {
+    await delay(500)
     events.value.push(event)
   }
 
-  const updateEvent = (updated: CalendarEvent) => {
+  const updateEvent = async (updated: CalendarEvent) => {
+    await delay(500)
     const idx = events.value.findIndex((e) => e.id === updated.id)
     if (idx !== -1) events.value[idx] = updated
   }
 
-  const deleteEvent = (id: string) => {
+  const deleteEvent = async (id: string) => {
+    await delay(500)
     events.value = events.value.filter((e) => e.id !== id)
   }
 
