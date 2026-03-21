@@ -22,10 +22,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import {
-  PinInput,
-  PinInputGroup,
-  PinInputSlot,
-} from '@/components/ui/pin-input'
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from '@/components/ui/input-otp'
 import { Button } from '@/components/ui/button'
 
 const open = defineModel<boolean>('open', { required: true })
@@ -34,14 +34,11 @@ const router = useRouter()
 const isLoading = ref(false)
 
 const otpSchema = z.object({
-  code: z.array(z.string()).length(6, 'OTP must be exactly 6 digits'),
+  code: z.string().length(6, 'OTP must be exactly 6 digits'),
 })
 
 const form = useForm({
   validationSchema: toTypedSchema(otpSchema),
-  initialValues: {
-    code: [],
-  },
 })
 
 watch(open, (isOpen) => {
@@ -53,7 +50,7 @@ watch(open, (isOpen) => {
 const onSubmit = form.handleSubmit(async (values) => {
   isLoading.value = true
   try {
-    await store.verifyOtp(values.code.join(''))
+    await store.verifyOtp(values.code)
     open.value = false
     router.push('/')
   } catch (err) {
@@ -76,25 +73,23 @@ const onSubmit = form.handleSubmit(async (values) => {
       </DialogHeader>
 
       <form @submit="onSubmit" class="space-y-4 py-4">
-        <FormField v-slot="{ value, handleChange }" name="code">
+        <FormField v-slot="{ componentField }" name="code">
           <FormItem>
             <FormLabel class="text-center block">One-Time Password</FormLabel>
             <FormControl>
               <div class="flex justify-center mt-2">
-                <PinInput
-                  id="pin-input"
-                  :model-value="value"
-                  @update:model-value="handleChange"
+                <InputOTP
+                  id="input-otp"
+                  :maxlength="6"
+                  v-bind="componentField"
                   class="flex gap-2 items-center"
                 >
-                  <PinInputGroup class="gap-2">
+                  <InputOTPGroup class="gap-2">
                     <template v-for="(id, index) in 6" :key="id">
-                      <PinInputSlot
-                        :index="index"
-                      />
+                      <InputOTPSlot :index="index" />
                     </template>
-                  </PinInputGroup>
-                </PinInput>
+                  </InputOTPGroup>
+                </InputOTP>
               </div>
             </FormControl>
             <FormMessage class="text-center" />
