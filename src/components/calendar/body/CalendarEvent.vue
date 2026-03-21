@@ -7,7 +7,8 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import EventDialog from '../dialog/EventDialog.vue'
 import CalendarEventTooltip from './CalendarEventTooltip.vue'
 import type { CalendarEvent, CalendarEventPosition } from '../calendar.types'
-import { CALENDAR_CELL_HEIGHT } from '../calendar.constants'
+import { CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT } from '../calendar.constants'
+import { useCalendarSettings } from '@/stores/calendarSettings'
 
 const { event, month = false, className, events } = defineProps<{
   event: CalendarEvent
@@ -29,6 +30,9 @@ const getOverlappingEvents = (
     )
   })
 }
+
+const settings = useCalendarSettings()
+const cellHeight = computed(() => settings.compactView ? CALENDAR_COMPACT_CELL_HEIGHT : CALENDAR_CELL_HEIGHT)
 
 const calculateEventPosition = (
   event: CalendarEvent,
@@ -53,9 +57,9 @@ const calculateEventPosition = (
     endMinutes = 59
   }
 
-  const topPosition = startHour * CALENDAR_CELL_HEIGHT + (startMinutes / 60) * CALENDAR_CELL_HEIGHT
+  const topPosition = startHour * cellHeight.value + (startMinutes / 60) * cellHeight.value
   const duration = endHour * 60 + endMinutes - (startHour * 60 + startMinutes)
-  const height = (duration / 60) * CALENDAR_CELL_HEIGHT
+  const height = (duration / 60) * cellHeight.value
 
   return {
     left,

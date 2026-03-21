@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { isSameDay } from 'date-fns'
-import { CALENDAR_HEADER_HEIGHT, CALENDAR_CELL_HEIGHT } from '../../calendar.constants'
+import { CALENDAR_HEADER_HEIGHT, CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT } from '../../calendar.constants'
+import { useCalendarSettings } from '@/stores/calendarSettings';
 
 const props = defineProps<{
   date?: Date | Date[] // Show if current day is in this set
@@ -23,6 +24,9 @@ onUnmounted(() => {
   clearInterval(timer)
 })
 
+const settings = useCalendarSettings()
+const cellHeight = computed(() => settings.compactView ? CALENDAR_COMPACT_CELL_HEIGHT : CALENDAR_CELL_HEIGHT)
+
 const shouldShow = computed(() => {
   if (!props.date) return true
   if (Array.isArray(props.date)) {
@@ -34,7 +38,7 @@ const shouldShow = computed(() => {
 const topPosition = computed(() => {
   const hours = now.value.getHours()
   const minutes = now.value.getMinutes()
-  return CALENDAR_HEADER_HEIGHT + hours * CALENDAR_CELL_HEIGHT + (minutes * CALENDAR_CELL_HEIGHT) / 60
+  return CALENDAR_HEADER_HEIGHT + hours * cellHeight.value + (minutes * cellHeight.value) / 60
 })
 </script>
 

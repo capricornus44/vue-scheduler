@@ -5,12 +5,16 @@ import { isSameDay } from 'date-fns'
 import CalendarBodyHeader from '../CalendarBodyHeader.vue';
 import Event from '../CalendarEvent.vue';
 import type { CalendarEvent } from '../../calendar.types';
-import { TimelineHours, CALENDAR_CELL_HEIGHT } from '../../calendar.constants';
+import { TimelineHours, CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT } from '../../calendar.constants';
+import { useCalendarSettings } from '@/stores/calendarSettings';
 
 const { date, events } = defineProps<{
   date: Date
   events: CalendarEvent[]
 }>()
+
+const settings = useCalendarSettings()
+const cellHeight = computed(() => settings.compactView ? CALENDAR_COMPACT_CELL_HEIGHT : CALENDAR_CELL_HEIGHT)
 
 const dayEvents = computed(() => {
   return events.filter((event) => isSameDay(event.start, date))
@@ -26,7 +30,7 @@ const dayEvents = computed(() => {
         v-for="hour in TimelineHours" 
         :key="hour" 
         class="border-b border-border/50 group" 
-        :style="{ height: `${CALENDAR_CELL_HEIGHT}px` }"
+        :style="{ height: `${cellHeight}px` }"
       />
 
       <Event v-for="event in dayEvents" :key="event.id" :event="event" :events="events" />

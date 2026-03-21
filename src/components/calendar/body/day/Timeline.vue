@@ -1,12 +1,17 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { format } from 'date-fns'
 
 import { cn } from '@/lib/utils'
-import { TimelineHours, CALENDAR_CELL_HEIGHT, CALENDAR_HEADER_HEIGHT } from '../../calendar.constants'
+import { TimelineHours, CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT, CALENDAR_HEADER_HEIGHT } from '../../calendar.constants'
+import { useCalendarSettings } from '@/stores/calendarSettings'
 
 const { className } = defineProps<{
   className?: string
 }>()
+
+const settings = useCalendarSettings()
+const cellHeight = computed(() => settings.compactView ? CALENDAR_COMPACT_CELL_HEIGHT : CALENDAR_CELL_HEIGHT)
 </script>
 
 <template>
@@ -20,7 +25,7 @@ const { className } = defineProps<{
         v-for="hour in TimelineHours"
         :key="hour"
         class="relative first:mt-0"
-        :style="{ height: `${CALENDAR_CELL_HEIGHT}px` }"
+        :style="{ height: `${cellHeight}px` }"
       >
         <span v-if="hour !== 0" class="absolute text-xs text-gray-400 -top-2.5 left-2">
           {{ format(new Date(new Date().setHours(hour, 0, 0, 0)), 'h a') }}

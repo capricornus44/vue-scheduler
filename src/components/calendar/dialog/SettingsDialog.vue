@@ -62,6 +62,19 @@ watch(() => settings.startWeekOnSunday, (val) => {
           </p>
         </div>
       </div>
+
+      <div class="flex items-center justify-between space-x-4 rounded-lg border py-2 px-4 shadow-sm hover:bg-accent/50 transition-colors">
+        <div class="space-y-0.5">
+          <Label for="compact-view" class="text-sm font-bold">Compact view</Label>
+          <p class="text-xs text-muted-foreground">
+            Reduces the height of the calendar grid.
+          </p>
+        </div>
+        <Switch
+          id="compact-view"
+          v-model:checked="settings.compactView"
+        />
+      </div>
     </div>
   </DialogContent>
 </template>
