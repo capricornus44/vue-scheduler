@@ -1,77 +1,49 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { format, isSameDay } from 'date-fns'
+import { format } from 'date-fns'
 
 import { cn } from '@/lib/utils'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import EventDialog from '../dialog/EventDialog.vue'
 import CalendarEventTooltip from './CalendarEventTooltip.vue'
-import type { CalendarEvent, CalendarEventPosition } from '../calendar.types'
+import type { CalendarEvent, PositionedCalendarEvent } from '../calendar.types'
 import { CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT } from '../calendar.constants'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 
-const { event, month = false, className, events } = defineProps<{
-  event: CalendarEvent
+const props = defineProps<{
+  event: CalendarEvent | PositionedCalendarEvent
   month?: boolean
   className?: string
-  events: CalendarEvent[]
 }>()
-
-const getOverlappingEvents = (
-  currentEvent: CalendarEvent,
-  events: CalendarEvent[]
-): CalendarEvent[] => {
-  return events.filter((event) => {
-    if (event.id === currentEvent.id) return false
-    return (
-      currentEvent.start < event.end &&
-      currentEvent.end > event.start &&
-      isSameDay(currentEvent.start, event.start)
-    )
-  })
-}
 
 const settings = useCalendarSettings()
 const cellHeight = computed(() => settings.compactView ? CALENDAR_COMPACT_CELL_HEIGHT : CALENDAR_CELL_HEIGHT)
 
-const calculateEventPosition = (
-  event: CalendarEvent,
-  allEvents: CalendarEvent[]
-): CalendarEventPosition => {
-  const overlappingEvents = getOverlappingEvents(event, allEvents)
-  const group = [event, ...overlappingEvents].sort(
-    (a, b) => a.start.getTime() - b.start.getTime()
-  )
-  const position = group.indexOf(event)
-  const width = `${100 / (overlappingEvents.length + 1)}%`
-  const left = `${(position * 100) / (overlappingEvents.length + 1)}%`
-
-  const startHour = event.start.getHours()
-  const startMinutes = event.start.getMinutes()
-
-  let endHour = event.end.getHours()
-  let endMinutes = event.end.getMinutes()
-
-  if (!isSameDay(event.start, event.end)) {
-    endHour = 23
-    endMinutes = 59
-  }
-
-  const topPosition = startHour * cellHeight.value + (startMinutes / 60) * cellHeight.value
-  const duration = endHour * 60 + endMinutes - (startHour * 60 + startMinutes)
-  const height = (duration / 60) * cellHeight.value
-
-  return {
-    left,
-    width,
-    top: `${topPosition}px`,
-    height: `${height}px`,
-  }
+const isPositioned = (event: CalendarEvent | PositionedCalendarEvent): event is PositionedCalendarEvent => {
+  return 'position' in event
 }
 
 const style = computed(() => {
-  if (month) return {}
-  return calculateEventPosition(event, events)
+  if (props.month) return {}
+  
+  if (isPositioned(props.event)) {
+    return props.event.position
+  }
+
+  // Fallback for non-positioned events (though they should be positioned by DayContent)
+  const startHour = props.event.start.getHours()
+  const startMinutes = props.event.start.getMinutes()
+  
+  const topPosition = startHour * cellHeight.value + (startMinutes / 60) * cellHeight.value
+  const duration = (props.event.end.getTime() - props.event.start.getTime()) / (1000 * 60)
+  const height = (duration / 60) * cellHeight.value
+
+  return {
+    top: `${topPosition}px`,
+    height: `${height}px`,
+    left: '0',
+    width: '100%'
+  }
 })
 
 const isEditOpen = ref(false)
@@ -83,7 +55,8 @@ const isEditOpen = ref(false)
       <DialogTrigger as-child>
         <div
           :class="cn(
-            `px-3 py-1.5 rounded-md truncate cursor-pointer transition-all duration-300 bg-${event.color}-500/10 hover:bg-${event.color}-500/20 border border-${event.color}-500 `,
+            'px-3 py-1.5 rounded-md truncate cursor-pointer transition-all duration-300 border border-transparent shadow-sm hover:shadow-md ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+            `bg-${event.color}-500/10 hover:bg-${event.color}-500/20 border-${event.color}-500/30 hover:border-${event.color}-500/60 text-${event.color}-600 dark:text-${event.color}-400`,
             !month && 'absolute',
             className
           )"
@@ -91,19 +64,19 @@ const isEditOpen = ref(false)
         >
           <div
             :class="cn(
-              `flex flex-col w-full text-${event.color}-500`,
+              'flex flex-col w-full h-full min-h-0',
               month && 'flex-row items-center justify-between'
             )"
           >
-            <p :class="cn('font-bold truncate', month && 'text-xs')">
-              {{ event.title }}
-            </p>
-            <p :class="cn('text-sm truncate', month && 'text-xs')">
-              <span>{{ format(event.start, 'h:mm a') }}</span>
-              <span :class="cn('mx-1', month && 'hidden')">-</span>
-              <span :class="cn(month && 'hidden')">
-                {{ format(event.end, 'h:mm a') }}
-              </span>
+            <div class="flex items-center gap-1.5 min-w-0">
+              <div :class="cn('w-1 h-1 rounded-full shrink-0', `bg-${event.color}-500`)" v-if="!month" />
+              <p :class="cn('font-semibold truncate leading-tight', month ? 'text-xs' : 'text-sm')">
+                {{ event.title }}
+              </p>
+            </div>
+            
+            <p :class="cn('truncate opacity-80 mt-0.5', month ? 'hidden' : 'text-[11px]')">
+              {{ format(event.start, 'h:mm a') }} - {{ format(event.end, 'h:mm a') }}
             </p>
           </div>
         </div>

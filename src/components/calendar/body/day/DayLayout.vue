@@ -8,7 +8,7 @@ import { CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT } from '../../calend
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { useCalendarStore } from '@/stores/calendarStore'
 import { useCalendarEvents } from '@/composables/useCalendarEvents'
-import { scrollToWorkingHours } from '@/lib/calendar'
+import { scrollToWorkingHours } from '@/lib/calendar.utils'
 
 const store = useCalendarStore()
 const settings = useCalendarSettings()

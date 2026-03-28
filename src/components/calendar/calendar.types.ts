@@ -25,3 +25,7 @@ export interface CalendarEventPosition {
   height: string
 }
 
+export interface PositionedCalendarEvent extends CalendarEvent {
+  position: CalendarEventPosition
+}
+

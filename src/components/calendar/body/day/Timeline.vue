@@ -5,7 +5,7 @@ import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { TimelineHours, CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT, CALENDAR_HEADER_HEIGHT } from '../../calendar.constants'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
-import { isWorkingHour } from '@/lib/calendar'
+import { isWorkingHour } from '@/lib/calendar.utils'
 
 const { className } = defineProps<{
   className?: string
