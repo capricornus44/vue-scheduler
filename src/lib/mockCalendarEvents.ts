@@ -31,8 +31,8 @@ export const generateMockEvents = (): CalendarEvent[] => {
   const events: CalendarEvent[] = []
   const startDate = startOfMonth(new Date())
 
-  // Generate 10 events over 1 month
-  for (let i = 0; i < 10; i++) {
+  // Generate  events over 1 month
+  for (let i = 0; i < 45; i++) {
     // Random date between start and end
     const daysToAdd = Math.floor(Math.random() * 30) // 30 days = 1 month
     const eventDate = addDays(startDate, daysToAdd)

@@ -1,30 +1,22 @@
+import type { CalendarSettings } from "@/components/calendar/calendar.types"
+import { DEFAULT_CALENDAR_SETTINGS } from "@/components/calendar/calendar.constants"
 import { delay } from "@/lib/utils"
 
-export interface CalendarSettings {
-  hideWeekends: boolean
-  startWeekOnSunday: boolean
-  compactView: boolean
-  showWorkingHours: boolean
-}
+const STORAGE_KEY = 'calendar_settings'
 
-const STORAGE_KEY = 'mock_calendar_settings'
-
-const defaultSettings: CalendarSettings = {
-  hideWeekends: false,
-  startWeekOnSunday: false,
-  compactView: false,
-  showWorkingHours: false,
+export const getStoredCalendarSettings = (): CalendarSettings => {
+  const saved = localStorage.getItem(STORAGE_KEY)
+  if (saved) return JSON.parse(saved)
+  return DEFAULT_CALENDAR_SETTINGS
 }
 
 export const fetchCalendarSettings = async (): Promise<CalendarSettings> => {
-  await delay(300)
-  const saved = localStorage.getItem(STORAGE_KEY)
-  if (saved) return JSON.parse(saved)
-  return defaultSettings
+  await delay(500)
+  return getStoredCalendarSettings()
 }
 
 export const updateCalendarSettings = async (settings: CalendarSettings): Promise<CalendarSettings> => {
-  await delay(300)
   localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
+  await delay(500)
   return settings
 }

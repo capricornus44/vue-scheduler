@@ -11,6 +11,13 @@ export interface CalendarEvent {
 
 export type CalendarView = (typeof CalendarViews)[number]
 
+export interface CalendarSettings {
+  hideWeekends: boolean
+  startWeekOnSunday: boolean
+  compactView: boolean
+  showWorkingHours: boolean
+}
+
 export interface CalendarEventPosition {
   left: string
   width: string

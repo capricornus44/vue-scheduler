@@ -1,20 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
-import { fetchCalendarSettings, updateCalendarSettings, type CalendarSettings } from '@/api/calendarSettings.api'
+import { fetchCalendarSettings, updateCalendarSettings } from '@/api/calendarSettings.api'
+import type { CalendarSettings } from '@/components/calendar/calendar.types'
+import { DEFAULT_CALENDAR_SETTINGS } from '@/components/calendar/calendar.constants'
 import { reactive } from 'vue'
-
-const defaultSettings: CalendarSettings = {
-  hideWeekends: false,
-  startWeekOnSunday: false,
-  compactView: false,
-  showWorkingHours: false,
-}
 
 export const useCalendarSettingsQuery = () => {
   return useQuery({
     queryKey: ['calendar', 'settings'],
     queryFn: fetchCalendarSettings,
-    staleTime: Infinity,
-    initialData: defaultSettings,
+    placeholderData: DEFAULT_CALENDAR_SETTINGS,
   })
 }
 
@@ -44,14 +38,19 @@ export const useCalendarSettings = () => {
   const { data } = useCalendarSettingsQuery()
   const { mutate } = useUpdateCalendarSettingsMutation()
 
+  const currentSettings = () => data.value ?? DEFAULT_CALENDAR_SETTINGS
+
   return reactive({
-    get hideWeekends() { return data.value?.hideWeekends ?? false },
-    set hideWeekends(val: boolean) { mutate({ ...data.value!, hideWeekends: val }) },
-    get startWeekOnSunday() { return data.value?.startWeekOnSunday ?? false },
-    set startWeekOnSunday(val: boolean) { mutate({ ...data.value!, startWeekOnSunday: val }) },
-    get compactView() { return data.value?.compactView ?? false },
-    set compactView(val: boolean) { mutate({ ...data.value!, compactView: val }) },
-    get showWorkingHours() { return data.value?.showWorkingHours ?? false },
-    set showWorkingHours(val: boolean) { mutate({ ...data.value!, showWorkingHours: val }) },
+    get hideWeekends() { return currentSettings().hideWeekends },
+    set hideWeekends(val: boolean) { mutate({ ...currentSettings(), hideWeekends: val }) },
+    
+    get startWeekOnSunday() { return currentSettings().startWeekOnSunday },
+    set startWeekOnSunday(val: boolean) { mutate({ ...currentSettings(), startWeekOnSunday: val }) },
+    
+    get compactView() { return currentSettings().compactView },
+    set compactView(val: boolean) { mutate({ ...currentSettings(), compactView: val }) },
+    
+    get showWorkingHours() { return currentSettings().showWorkingHours },
+    set showWorkingHours(val: boolean) { mutate({ ...currentSettings(), showWorkingHours: val }) },
   })
 }
