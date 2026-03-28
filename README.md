@@ -1,47 +1,55 @@
-# .
+# Vue Scheduler
 
-This template should help get you started developing with Vue 3 in Vite.
+A modern, high-performance calendar and scheduling application built with **Vue 3** and **TypeScript**. This project features a sophisticated event layout engine, customizable settings, and a robust state management system using **TanStack Query**.
 
-## Recommended IDE Setup
+## 🚀 Technologies
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Frontend**: Vue 3 (Composition API, `<script setup>`)
+- **Styling**: Tailwind CSS 4
+- **State Management**: TanStack Vue Query (v5)
+- **Date Utilities**: date-fns
+- **UI Components**: Radix UI (via reka-ui) & Lucide Icons
+- **Build Tool**: Vite
+- **Package Manager**: Bun
 
-## Recommended Browser Setup
+## ✨ Features
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- **Multiple Views**: Day, Week, and Month views for comprehensive scheduling.
+- **Event Management**: Create, edit, and delete events with a user-friendly dialog system.
+- **Smart Layout**: Advanced algorithm for handling overlapping events (clustering and columnar layout).
+- **Customizable Settings**:
+  - Show/Hide weekends.
+  - Custom working hours highlight.
+  - "Start week on Sunday" preference.
+  - Compact view mode.
+- **Optimistic UI**: Experience lightning-fast updates. Changes are reflected instantly in the UI while synchronization happens in the background.
 
-## Type Support for `.vue` Imports in TS
+## 📡 Backend Simulation
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+The project includes a robust **mock API** layer:
+- **Persistence**: Data is saved to `localStorage`, making your changes persistent across page reloads.
+- **Simulated Latency**: API calls include artificial delays to mimic real-world network behavior.
+- **Async Architecture**: The codebase is fully prepared for a transition to a real backend (REST or GraphQL) without major architectural changes.
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+## 🛠 Project Setup
 
 ```sh
 bun install
 ```
 
-### Compile and Hot-Reload for Development
+### Dev Server
 
 ```sh
 bun dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Production Build
 
 ```sh
 bun run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### Linting
 
 ```sh
 bun lint
