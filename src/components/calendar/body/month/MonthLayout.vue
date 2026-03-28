@@ -15,11 +15,13 @@ import {
 
 import { cn } from '@/lib/utils'
 import MonthEventCard from './MonthEventCard.vue'
-import { useCalendarSettings } from '@/stores/calendarSettings'
+import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { useCalendarStore } from '@/stores/calendarStore'
+import { useCalendarEvents } from '@/composables/useCalendarEvents'
 
 const store = useCalendarStore()
 const settings = useCalendarSettings()
+const { events } = useCalendarEvents()
 
 const days = computed(() => {
   const start = startOfWeek(startOfMonth(store.date), { weekStartsOn: settings.startWeekOnSunday ? 0 : 1 })
@@ -42,7 +44,7 @@ const weekDayHeaders = computed(() => {
 })
 
 const getDayEvents = (day: Date) => {
-  return store.events.filter(event => isSameDay(event.start, day))
+  return events.value.filter(event => isSameDay(event.start, day))
 }
 
 const handleDayClick = (day: Date) => {

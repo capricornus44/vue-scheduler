@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { isSameDay } from 'date-fns'
 import { CALENDAR_HEADER_HEIGHT, CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT } from '../../calendar.constants'
-import { useCalendarSettings } from '@/stores/calendarSettings';
+import { useCalendarSettings } from '@/composables/useCalendarSettings';
 
 const props = defineProps<{
   date?: Date | Date[] // Show if current day is in this set

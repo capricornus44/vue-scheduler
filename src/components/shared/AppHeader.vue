@@ -1,17 +1,7 @@
 <script setup lang="ts">
-import { Github, LogOut } from 'lucide-vue-next'
+import { Github } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import ThemeToggle from './ThemeToggle.vue'
-import { useUserStore } from '@/stores/userStore'
-import { useRouter } from 'vue-router'
-
-const store = useUserStore()
-const router = useRouter()
-
-const handleLogout = () => {
-  store.logout()
-  router.push('/login')
-}
 </script>
 
 <template>
@@ -29,10 +19,6 @@ const handleLogout = () => {
         </a>
       </Button>
       <ThemeToggle />
-      <Button v-if="store.isAuthenticated" variant="ghost" size="icon-lg" @click="handleLogout" title="Logout">
-        <LogOut class="h-[1.2rem] w-[1.2rem]" />
-        <span class="sr-only">Logout</span>
-      </Button>
     </div>
   </header>
 </template>

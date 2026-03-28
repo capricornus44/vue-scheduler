@@ -8,7 +8,7 @@ import EventDialog from '../dialog/EventDialog.vue'
 import CalendarEventTooltip from './CalendarEventTooltip.vue'
 import type { CalendarEvent, CalendarEventPosition } from '../calendar.types'
 import { CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT } from '../calendar.constants'
-import { useCalendarSettings } from '@/stores/calendarSettings'
+import { useCalendarSettings } from '@/composables/useCalendarSettings'
 
 const { event, month = false, className, events } = defineProps<{
   event: CalendarEvent

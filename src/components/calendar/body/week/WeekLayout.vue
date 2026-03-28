@@ -5,13 +5,15 @@ import { startOfWeek, addDays } from 'date-fns'
 import Timeline from '../day/Timeline.vue'
 import DayContent from '../day/DayContent.vue'
 import CurrentTimeLine from '../day/CurrentTimeLine.vue'
-import { useCalendarSettings } from '@/stores/calendarSettings'
+import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { useCalendarStore } from '@/stores/calendarStore'
+import { useCalendarEvents } from '@/composables/useCalendarEvents'
 import { CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT } from '../../calendar.constants'
 import { scrollToWorkingHours } from '@/lib/calendar'
 
 const store = useCalendarStore()
 const settings = useCalendarSettings()
+const { events } = useCalendarEvents()
 const scrollContainer = ref<HTMLElement | null>(null)
 const cellHeight = computed(() => settings.compactView ? CALENDAR_COMPACT_CELL_HEIGHT : CALENDAR_CELL_HEIGHT)
 
@@ -43,7 +45,7 @@ const weekDays = computed(() => {
             class="flex flex-1 divide-x md:divide-x-0"
           >
             <Timeline className="block md:hidden" />
-            <DayContent :date="day" :events="store.events" />
+            <DayContent :date="day" :events="events" />
           </div>
           <CurrentTimeLine :date="weekDays" />
         </div>

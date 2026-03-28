@@ -6,7 +6,7 @@ import CalendarBodyHeader from '../CalendarBodyHeader.vue';
 import Event from '../CalendarEvent.vue';
 import type { CalendarEvent } from '../../calendar.types';
 import { TimelineHours, CALENDAR_CELL_HEIGHT, CALENDAR_COMPACT_CELL_HEIGHT } from '../../calendar.constants';
-import { useCalendarSettings } from '@/stores/calendarSettings';
+import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { isWorkingHour } from '@/lib/calendar';
 
 const { date, events } = defineProps<{

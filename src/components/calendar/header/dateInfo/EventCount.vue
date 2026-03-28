@@ -2,11 +2,13 @@
 import { computed } from 'vue'
 import { isSameMonth } from 'date-fns'
 import { useCalendarStore } from '@/stores/calendarStore'
+import { useCalendarEvents } from '@/composables/useCalendarEvents'
 
 const store = useCalendarStore()
+const { events } = useCalendarEvents()
 
 const eventsInMonth = computed(() => {
-  return store.events.filter((event) => isSameMonth(event.start, store.date))
+  return events.value.filter((event) => isSameMonth(event.start, store.date))
 })
 </script>
 

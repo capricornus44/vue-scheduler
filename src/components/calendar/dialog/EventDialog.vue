@@ -18,6 +18,7 @@ import DateTimePicker from '@/components/shared/DateTimePicker.vue'
 import ColorPicker from '@/components/shared/ColorPicker.vue'
 import type { CalendarEvent } from '../calendar.types'
 import { useCalendarStore } from '@/stores/calendarStore'
+import { useCalendarEvents } from '@/composables/useCalendarEvents'
 import SubmitLoader from '@/components/shared/SubmitLoader.vue'
 import { ref } from 'vue'
 
@@ -27,6 +28,7 @@ const { event } = defineProps<{
 }>()
 
 const store = useCalendarStore()
+const { addEvent, updateEvent, deleteEvent } = useCalendarEvents()
 
 const eventSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -94,7 +96,7 @@ const onSubmit = form.handleSubmit(
     isSubmitting.value = true
     try {
       if (event) {
-        await store.updateEvent({
+        await updateEvent({
           ...event,
           title: values.title,
           start: new Date(values.start),
@@ -102,7 +104,7 @@ const onSubmit = form.handleSubmit(
           color: values.color,
         });
       } else {
-        await store.addEvent({
+        await addEvent({
           id: crypto.randomUUID(),
           title: values.title,
           start: new Date(values.start),
@@ -123,7 +125,7 @@ const onDelete = async () => {
   if (event) {
     isDeleting.value = true
     try {
-      await store.deleteEvent(event.id);
+      await deleteEvent(event.id);
       form.resetForm();
       open.value = false;
     } finally {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { DialogHeader, DialogTitle, DialogDescription, DialogContent } from '@/components/ui/dialog'
-import { useCalendarSettings } from '@/stores/calendarSettings'
+import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { watch } from 'vue'
 import { InfoIcon } from 'lucide-vue-next'
 import SettingsDialogCard from './SettingsDialogCard.vue'
